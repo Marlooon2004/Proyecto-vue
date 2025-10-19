@@ -19,6 +19,22 @@ function agregarEstudiante() {
     return
   }
 
+  const ci = id_model.value.trim()
+
+  const soloNumeros = /^\d{11}$/
+  if (!soloNumeros.test(ci)) {
+  alert('El carnet de identidad debe contener exactamente 11 dígitos numéricos sin letras.')
+  return
+  }
+
+  const mes = parseInt(ci.slice(2, 4), 10)     // Extrae los siguientes 2 → mes
+  const día = parseInt(ci.slice(4, 6), 10)     // Extrae los siguientes 2 → día
+
+  if (mes < 1 || mes > 12 || día < 1 || día > 31) {
+    alert('Por favor, verifique el campo de CI');
+    return
+  }
+
   personas.value.push({
     Nombre: name_model.value,
     Apellidos: last_name_model.value,
