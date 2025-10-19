@@ -19,26 +19,48 @@ function agregarEstudiante() {
     return
   }
 
+  const nombre = name_model.value.trim()
+  const apellidos = last_name_model.value.trim()
   const ci = id_model.value.trim()
 
-  const soloNumeros = /^\d{11}$/
-  if (!soloNumeros.test(ci)) {
-  alert('El carnet de identidad debe contener exactamente 11 dígitos numéricos sin letras.')
-  return
+  // Validación: nombre y apellidos deben tener más de una letra y no contener números
+  const soloLetras = /^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$/
+  if (!soloLetras.test(nombre) || nombre.length < 2) {
+    alert('El nombre debe tener al menos 2 letras y no contener números.')
+    return
   }
 
-  const mes = parseInt(ci.slice(2, 4), 10)     // Extrae los siguientes 2 → mes
-  const día = parseInt(ci.slice(4, 6), 10)     // Extrae los siguientes 2 → día
+  if (!soloLetras.test(apellidos) || apellidos.length < 2) {
+    alert('Los apellidos deben tener al menos 2 letras y no contener números.')
+    return
+  }
 
+  // Validación: CI debe tener exactamente 11 dígitos numéricos
+  const soloNumeros = /^\d{11}$/
+  if (!soloNumeros.test(ci)) {
+    alert('El carnet de identidad debe contener exactamente 11 dígitos numéricos sin letras.')
+    return
+  }
+
+  // Validación: fecha dentro del CI
+  const mes = parseInt(ci.slice(2, 4), 10)
+  const día = parseInt(ci.slice(4, 6), 10)
   if (mes < 1 || mes > 12 || día < 1 || día > 31) {
-    alert('Por favor, verifique el campo de CI');
+    alert('Por favor, verifique el campo de CI')
+    return
+  }
+
+  // Validación: CI no repetido
+  const ciExiste = personas.value.some(p => p.CI === ci)
+  if (ciExiste) {
+    alert('Ya existe una persona con ese carnet de identidad.')
     return
   }
 
   personas.value.push({
-    Nombre: name_model.value,
-    Apellidos: last_name_model.value,
-    CI: id_model.value,
+    Nombre: nombre,
+    Apellidos: apellidos,
+    CI: ci,
     check: check_model.value,
   })
 
